@@ -1,0 +1,34 @@
+/* site.css */
+body {
+    background-color: #808080; /* 灰色背景 */
+    color: #b6ff00; /* 大師胸文字 */
+}
+
+.navbar {
+    color: #ffd800; /* 嘿悟空後一句 */
+    font-size: 1.5em;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #fff; /* 最上側文字--首頁等等 */
+    font-size: 1.0em;
+}
+
+.navbar-dark .navbar-brand {
+    color: #ff0000; /* 嘿悟空的紅色文字 */
+    font-size: 1.55em;
+}
+
+
+
+
+.btn-primary {
+    background-color: #000; /* 黑色按鈕背景 */
+    border-color: #000; /* 黑色按鈕邊框 */
+    color: #fff; /* 按鈕上的白色文字 */
+}
+
+    .btn-primary:hover {
+        background-color: #333; /* 鼠標懸停時的更深黑色 */
+        border-color: #333; /* 鼠標懸停時的更深黑色邊框 */
+    }

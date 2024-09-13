@@ -1,0 +1,82 @@
+﻿@model MyModel_CodeFirst.Models.Book
+
+@{
+    ViewData["Title"] = "路報，資訊，服務";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<hr />
+<div class="row">
+    <div class="col-lg-5">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="6"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Photo" class="control-label"></label>
+                <input type="file" name="uploadPhoto" id="uploadPhoto" class="form-control" />
+                <span class="text-danger">@ViewData["Message"]</span>
+               @*  <input asp-for="Photo" class="form-control" /> *@
+              @*   <span asp-validation-for="Photo" class="text-danger"></span> *@
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="Author" class="control-label"></label>
+                <input asp-for="Author" class="form-control" />
+                <span asp-validation-for="Author" class="text-danger"></span>
+            </div>
+
+       @*      <div class="form-group">
+                <label asp-for="TimeStamp" class="control-label"></label>
+                <input asp-for="TimeStamp" class="form-control" />
+                <span asp-validation-for="TimeStamp" class="text-danger"></span>
+            </div> *@
+@* 
+            <div class="form-group">
+                <label asp-for="ImageType" class="control-label"></label>
+                <input asp-for="ImageType" class="form-control" />
+                <span asp-validation-for="ImageType" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <input type="submit" value="留下資訊" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-7" id="photoPreview">
+
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" style="font-size: 2.5em; color: yellowgreen;">返回報</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $('#uploadPhoto').change(function () {
+            let file = this.files[0];
+
+            let reader = new FileReader();
+
+            reader.onload = event => {
+                $('#photoPreview').html(`<img src="${event.target.result}" width="800" class="img-fluid" />`);
+            };
+            reader.readAsDataURL(file);
+        });
+    </script>
+
+
+}

@@ -1,0 +1,128 @@
+﻿@model MyModel_CodeFirst.Models.Book
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<h1>@Html.DisplayFor(model => model.Title)</h1>
+
+<div class="card shadow">
+    @* //3.3.9 在Display View中加入未上傳照片的留言之顯示方式 *@
+    @if (Model.Photo != null)
+    {
+        <img src="@Url.Action("GetImage","Books",new{gid=Model.GId})
+                " class="card-img-top" alt="...">
+    }
+    <div class="card-body">
+        <h3 class="card-title"><strong>@Html.DisplayFor(model => model.Title)</strong></h3>
+        @* //3.3.11 在Display View中加入處理「有換行的留言」顯示方式 *@
+        <p class="card-text">@Html.Raw(Model.Description.ToString().Replace("\r\n", "<br>"))</p>
+        <p class="text-end fs-6">@Html.DisplayFor(model => model.Author) 於 @Html.DisplayFor(model => model.TimeStamp) 發佈</p>
+    </div>
+</div>
+<hr />
+@* <a asp-action="Create" asp-controller="RePostBooks" asp-route-GId="@Model.GId" class="btn btn-success btn-lg my-3">我要回覆</a> *@
+@* <button class="btn btn-success" onclick="showReForm()">我要回覆</button> *@
+
+
+
+@* //3.5.8 配合Boostrap Modal Component顯示出畫面 *@
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#ReFormModal">
+    我要回覆
+</button>
+
+<!-- Modal -->
+<div class="modal fade shadow" id="ReFormModal">
+    <div class="modal-dialog modal-xl ">
+        <div class="modal-content bg-light">
+            <div class="modal-header">
+                <h1 class="modal-title fs-3 text-center" id="exampleModalLabel">回覆留言</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="ReForm">
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-warning" onclick="ReCreate()">確定回覆</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* <div id="ReForm" class="p-4 border alert alert-info my-3">
+</div>
+ *@
+ <div id="reBookList">
+    @await Component.InvokeAsync("VCReBooks", new { gid = Model.GId })
+</div>
+
+<div class="text-end my-3">
+    <a asp-action="Index">回留言板首頁</a>
+</div>
+
+@*//3.5.7 在PostBooks\Display View中將RePostBooks\Create View以Ajax方式讀入 *@
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        const ReFormModal = new bootstrap.Modal(document.getElementById('ReFormModal'));
+        //3.5.7 在PostBooks\Display View中將RePostBooks\Create View以Ajax方式讀入
+        $('#ReForm').load(`/RePostBooks/Create?GId=@(Model.GId)`);
+
+        // $.ajax({
+        //     type: "Get",
+        //     url: `/RePostBooks/Create?GId=@(Model.GId)`,
+        //     success: (data) => {
+        //         console.log(data);
+        //         $('#ReForm').html(data);
+        //     }
+
+        // });
+
+        //3.5.11 在PostBooks\Display View中撰寫相關的JavaScript程式，以Ajax方式執行新增回覆留言
+        function ReCreate() {
+
+            console.log($('#reForm').serialize());
+
+            $.ajax({
+                type: "Post",
+                url: `/RePostBooks/Create`,
+                data: $('#reForm').serialize(), //將資料序列化後送出
+                success: (data) => {
+                    //console.log(data);
+                    //3.6.1  將 Modal內的表單清空並結束Modal顯示
+                    
+                    //1.清空表單
+                    $('#Description').val('');
+                    $('#Author').val('');
+
+                    //2.把Modal視窗關閉
+                    
+                    ReFormModal.hide();
+
+
+                    //3.6.2  重新讀取回覆留言的ViewComComponent,使其能顯示最新的回覆留言
+                    //3.重新讀取回覆留言的資料
+                    //重新載入ViewComponent
+
+                    //使用Ajax的方式載入
+                    $('#reBookList').load(`/RePostBooks/GetRebookByViewComponent/@(Model.GId)`);
+                  
+                }
+            });
+
+        }
+
+
+        // function showReForm(){
+        //     $('#ReForm').slideToggle(2000);
+        // }
+
+
+
+
+
+    </script>
+}

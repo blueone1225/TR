@@ -1,0 +1,77 @@
+﻿@model MyModel_CodeFirst.Models.Book
+
+@{
+    ViewData["Title"] = "編輯留言";
+    Layout = "_Layout";
+}
+
+<h1 class="alert alert-danger text-center">@ViewData["Title"]</h1>
+
+<h5 class="alert alert-warning">您確定要編輯底下的留言嗎？</h5>
+
+<div class="card shadow">
+    @if (Model.Photo != null)
+    {
+        <img src="@Url.Action("GetImage", new { gid = Model.GId })" class="card-img-top" alt="...">
+    }
+    <div class="card-body">
+        <h3 class="card-title"><strong>@Html.DisplayFor(model => model.Title)</strong></h3>
+        
+        <p class="card-text">
+            @if (Model.Description != null)
+            {
+                @Html.Raw(Model.Description.Replace("\r\n", "<br>"))
+            }
+            else
+            {
+                <span>No description available.</span>
+            }
+        </p>
+
+
+        <p class="text-end fs-6">@Html.DisplayFor(model => model.Author) 於 @Html.DisplayFor(model => model.TimeStamp) 發佈</p>
+        <hr />
+        @* <a href="#" class="btn btn-danger btn-lg">確定編輯留言</a> *@
+        
+        <form asp-action="Edit" method="post" class="mb-3">
+            <input type="hidden" asp-for="GId" />
+            <div class="mb-3">
+                <label for="Title" class="form-label">標題</label>
+                <input type="text" asp-for="Title" class="form-control" id="Title" name="Title" required />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label for="Description" class="form-label">內容</label>
+                <textarea asp-for="Description" class="form-control" id="Description" name="Description" rows="5" required></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label for="Author" class="form-label">留言人</label>
+                <textarea asp-for="Author" class="form-control" id="Author" name="Author" required></textarea>
+                <span asp-validation-for="Author" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label for="TimeStamp" class="form-label">留言時間</label>
+                <textarea asp-for="TimeStamp" class="form-control" id="TimeStamp" name="TimeStamp" required></textarea>
+                <span asp-validation-for="TimeStamp" class="text-danger"></span>
+            </div>
+            <div class="d-grid gap-2">
+                <input type="submit" value="儲存變更" class="btn btn-primary btn-lg" />
+            </div>
+        </form>
+
+        
+    </div>
+</div>
+
+<hr />
+
+@await Component.InvokeAsync("VCReBooks", new { gid = Model.GId })
+
+<a asp-action="Index">回留言板管理主畫面</a>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

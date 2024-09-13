@@ -1,0 +1,36 @@
+﻿@* //2.4.8 在Default View上方加入@model IEnumerable<MyModel_CodeFirst.Models.ReBook> *@
+@model IEnumerable<MyModel_CodeFirst.Models.ReBook>
+
+@{
+    Layout = null;
+    var Manager = Context.Session.GetString("Manager");
+
+
+}
+
+@* //2.4.9 依喜好編輯Default View排版方式 *@
+
+@if (Model.Count() != 0)
+{
+    <div class="border border-1 rounded p-4 bg-light">
+        <h4 class="text-center mt-1">回覆內容</h4>
+        @foreach (var item in Model)
+        {
+            <p>@Html.Raw(item.Description.ToString().Replace("\r\n", "<br>"))</p>
+
+            <p class="text-end fs-6">@item.Author 於 @item.TimeStamp 回覆</p>
+            <div class="text-end">
+                @* //4.2.8 在VCReBooks View Component中加入未登入看不到刪除鈕的判斷式 *@
+                @* //2.5.3 在在VCReBook ViewComponent的View中(Default.cshtml)建立每則回覆留言的刪除鈕 *@
+                @if (Manager != null)
+                {
+                    <form asp-action="DeleteReBook">
+                        <input type="hidden" value="@item.RId" name="id" />
+                        <input type="submit" value="刪除" class="btn btn-danger" onclick="return confirm('您確定要刪除此篇回覆嗎？')" />
+                    </form>
+                }
+            </div>
+            <hr />
+        }
+    </div>
+}

@@ -1,0 +1,41 @@
+﻿@model IEnumerable<MyModel_CodeFirst.Models.Book>
+
+@{
+    ViewData["Title"] = "資訊中心-路報";
+}
+
+<h1 class="text-center shadow p-4">@ViewData["Title"]</h1>
+
+<p class="d-grid gap-2">
+    <a asp-action="Create" class="btn btn-primary btn-lg">回報</a>
+</p>
+
+<div class="row">
+
+    @foreach (var item in Model)
+    {
+        <div class="card shadow mb-4 col-lg-6">
+            @* //3.3.8 在Index View中加入未上傳照片的留言之顯示方式 *@
+            @if (item.Photo != null)
+            {
+                <img src="@Url.Action("GetImage","Books",new{gid=item.GId})" class="card-img-top" alt="...">
+            }
+            <div class="card-body">
+                <h3 class="card-title"><strong>@Html.DisplayFor(modelItem => item.Title)</strong></h3>
+                @* //3.3.10 在Index View中加入處理「有換行的留言」顯示方式 *@
+                <p class="card-text">@Html.Raw(item.Description.ToString().Replace("\r\n","<br>"))</p>
+
+            </div>
+            <div class="card-footer">
+                <p class="text-end fs-6">
+                    @Html.DisplayFor(modelItem => item.Author) 於 @Html.DisplayFor(modelItem => item.TimeStamp) 發佈
+                   @*  //3.2.3 修改Index View中Details的超鏈結為Display *@
+                    | <a asp-action="Display" asp-route-id="@item.GId">看更多...</a>
+                </p>
+            </div>
+        </div>
+    }
+</div>
+<p class="d-grid gap-2">
+    <a asp-action="Create" class="btn btn-primary btn-lg">我要留言</a>
+</p>

@@ -1,0 +1,54 @@
+﻿@model IEnumerable<MyModel_CodeFirst.Models.Book>
+
+@{
+    ViewData["Title"] = "Home Page";
+
+    string a = "active";
+
+    int i = 0;
+
+}
+
+<div class="mt-4 p-5 bg-light text-dark shadow rounded jumbotron">
+    <h1 class="display-4 text-dark textShadow"><strong>交通資訊服務網</strong></h1>
+
+    <h3 class="text-dark textShadow"> 安全，便利，你的去處</h3>
+    <h4 class="text-dark ">
+        <span class="textShadow"> S </span> <a asp-action="Index" asp-controller="PostBooks" class="btn btn-warning btn-lg">回報</a>
+    </h4>
+</div>
+<hr />
+
+
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+     
+        @for (int j = 0; j < Model.Count(); j++)
+        {
+           
+            a = j == 0 ? "active" : "";
+
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@j" class="@a" aria-current="true" aria-label="Slide 1"></button>
+        }
+    </div>
+    <div class="carousel-inner">
+
+        @foreach (var item in Model)
+        {
+            a = i == 0 ? "active" : "";
+
+            <div class="carousel-item @a" data-bs-interval="2000">
+                <img src="@Url.Action("GetImage","Books",new{gid=item.GId})" class="d-block w-100" alt="...">
+            </div>
+            i++;
+        }
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>

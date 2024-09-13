@@ -1,0 +1,54 @@
+﻿@model MyModel_CodeFirst.Models.Book
+
+@{
+    ViewData["Title"] = "刪除留言";
+    Layout = "_Layout";
+}
+
+
+<h1 class="alert alert-danger text-center">@ViewData["Title"]</h1>
+
+<h5 class="alert alert-warning">您確定要刪除底下的留言嗎？</h5>
+
+<div class="card shadow">
+    @if (Model.Photo != null)
+    {
+        <img src="@Url.Action("GetImage",new{gid=Model.GId})
+        " class="card-img-top" alt="...">
+    }
+    <div class="card-body">
+        <h3 class="card-title"><strong>@Html.DisplayFor(model => model.Title)</strong></h3>
+        <p class="card-text">@Html.Raw(Model.Description.ToString().Replace("\r\n", "<br>"))</p>
+        <p class="text-end fs-6">@Html.DisplayFor(model => model.Author) 於 @Html.DisplayFor(model => model.TimeStamp) 發佈</p>
+        <hr />
+
+        @* <a href="#" class="btn btn-danger btn-lg">確定刪除此筆留言</a> *@
+
+        <form asp-action="Delete" class="d-grid gap-2">
+            <input type="hidden" asp-for="GId" />
+            <input type="submit" value="確定刪除此筆留言" class="btn btn-danger btn-lg" onclick="return confirm('請注意!!您將會刪除此留言及其所有回覆留言的內容，且無法回復。您確定要刪除嗎？')" />
+        </form>
+
+
+
+
+    </div>
+</div>
+<hr />
+
+
+    @*  @foreach(var item in ViewBag.rebook)
+    {
+    <p>@item.Description</p>
+
+    <p class="text-end fs-6">@item.Author 於 @item.TimeStamp 發佈</p>
+    <hr />
+    } *@
+
+    @* //2.4.10 編寫Delete View，加入VCReBooks ViewComponent *@
+@await Component.InvokeAsync("VCReBooks", new { gid = Model.GId })
+
+
+
+
+<a asp-action="Index">回留言板管理主畫面</a>
